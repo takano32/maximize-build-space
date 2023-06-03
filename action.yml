@@ -167,9 +167,9 @@ runs:
           # create and mount build volume
           sudo lvcreate -l 100%FREE -n buildlv "${VG_NAME}"
           if [[ ${{ inputs.overprovision-lvm }} == 'true' ]]; then
-            sudo mkfs.xfs "/dev/mapper/${VG_NAME}-buildlv"
+            sudo mkfs.xfs -m reflink=1 "/dev/mapper/${VG_NAME}-buildlv"
           else
-            sudo mkfs.xfs -K "/dev/mapper/${VG_NAME}-buildlv"
+            sudo mkfs.xfs -K -m reflink=1 "/dev/mapper/${VG_NAME}-buildlv"
           fi
           sudo mount "/dev/mapper/${VG_NAME}-buildlv" "${BUILD_MOUNT_PATH}"
           sudo chown -R runner "${BUILD_MOUNT_PATH}"
